@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Facial Recognition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Real-time Facial Recognition</h1>
+            <p>Privacy-first facial recognition powered by client-side AI</p>
+        </header>
+
+        <nav class="navigation" style="text-align: center; margin-bottom: 30px;">
+            <a href="index.html" class="nav-link active" style="display: inline-block; padding: 10px 20px; margin: 0 10px; background: linear-gradient(45deg, #3b82f6, #8b5cf6); color: #ffffff; text-decoration: none; border-radius: 8px; transition: all 0.3s ease;">🎥 Live Camera</a>
+            <a href="upload.html" class="nav-link" style="display: inline-block; padding: 10px 20px; margin: 0 10px; background: rgba(255, 255, 255, 0.1); color: #ffffff; text-decoration: none; border-radius: 8px; transition: all 0.3s ease;">📸 Upload Images</a>
+        </nav>
+
+        <main>
+            <div class="video-container">
+                <video id="videoElement" autoplay muted playsinline></video>
+                <canvas id="overlay"></canvas>
+                <div id="status" class="status">Ready to start</div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <button id="startBtn" class="btn primary">Start Camera</button>
+                    <button id="stopBtn" class="btn secondary" disabled>Stop Camera</button>
+                    <button id="switchBtn" class="btn secondary" disabled>Switch Camera</button>
+                </div>
+
+                <div class="control-group">
+                    <button id="enrollBtn" class="btn accent" disabled>Enroll Face</button>
+                    <button id="clearBtn" class="btn danger">Clear Enrolled Faces</button>
+                </div>
+
+                <div class="settings">
+                    <label>
+                        <input type="checkbox" id="showLandmarks" checked>
+                        Show Face Landmarks
+                    </label>
+                    <label>
+                        <input type="range" id="confidenceThreshold" min="0.3" max="0.9" step="0.1" value="0.6">
+                        Confidence Threshold: <span id="confidenceValue">0.6</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="detection-info">
+                    <h3>Detection Info</h3>
+                    <div id="detectionStats">
+                        <p>Faces detected: <span id="faceCount">0</span></p>
+                        <p>Recognition mode: <span id="recognitionMode">Detection only</span></p>
+                        <p>Enrolled faces: <span id="enrolledCount">0</span></p>
+                    </div>
+                </div>
+
+                <div class="recognized-faces">
+                    <h3>Recognized Faces</h3>
+                    <div id="recognizedList"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="browser-support">
+                <h4>Browser Support</h4>
+                <p>✅ Chrome 61+ | ✅ Firefox 55+ | ✅ Safari 11+ | ✅ Edge 79+</p>
+            </div>
+            <div class="privacy-notice">
+                <h4>Privacy Notice</h4>
+                <p>All processing happens locally in your browser. No data is sent to servers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Load face-api.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@latest/dist/face-api.min.js"></script>
+    <script src="face-detection.js"></script>
+    <script src="face-recognition.js"></script>
+    <script src="camera-manager.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

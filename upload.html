@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Upload & Enrollment</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .file-upload-area {
+            border: 2px dashed #3b82f6;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #8b5cf6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #3b82f6;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .image-preview {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .preview-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .enrollment-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .detection-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .detection-results.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+
+        .enrolled-faces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .enrolled-face-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .enrolled-face-card h4 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .enrolled-face-card p {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+        }
+
+        .remove-face-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-face-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Face Upload & Enrollment</h1>
+            <p>Upload photos to enroll faces for recognition</p>
+        </header>
+
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">🎥 Live Camera</a>
+            <a href="upload.html" class="nav-link active">📸 Upload Images</a>
+        </nav>
+
+        <div class="upload-container">
+            <div class="upload-section">
+                <h2>Upload Face Image</h2>
+                
+                <div class="file-upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <h3>Drop an image here or click to browse</h3>
+                    <p>Supports JPG, PNG, GIF files</p>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+
+                <div class="preview-container" id="previewContainer">
+                    <div class="image-preview">
+                        <img id="previewImage" class="preview-image" alt="Preview">
+                        <canvas id="previewCanvas" class="preview-canvas"></canvas>
+                    </div>
+                    
+                    <div id="detectionResults" class="detection-results" style="display: none;">
+                        <h4>Detection Results</h4>
+                        <p id="detectionMessage"></p>
+                    </div>
+
+                    <div class="enrollment-form" id="enrollmentForm">
+                        <h3>Enroll This Face</h3>
+                        <div class="form-group">
+                            <label for="faceName">Person's Name:</label>
+                            <input type="text" id="faceName" class="form-input" placeholder="Enter name for this face" required>
+                        </div>
+                        <div class="control-group">
+                            <button id="enrollFaceBtn" class="btn accent">Enroll Face</button>
+                            <button id="cancelBtn" class="btn secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <h2>Enrolled Faces</h2>
+                <div id="enrolledFacesContainer">
+                    <div id="enrolledFacesList" class="enrolled-faces-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="browser-support">
+                <h4>Supported Formats</h4>
+                <p>✅ JPG/JPEG | ✅ PNG | ✅ GIF | ✅ WebP</p>
+            </div>
+            <div class="privacy-notice">
+                <h4>Privacy Notice</h4>
+                <p>All processing happens locally. Images are not uploaded to any server.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Load face-api.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@latest/dist/face-api.min.js"></script>
+    <script src="face-detection.js"></script>
+    <script src="face-recognition.js"></script>
+    <script src="upload-manager.js"></script>
+</body>
+</html>
